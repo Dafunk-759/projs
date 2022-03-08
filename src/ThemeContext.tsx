@@ -1,8 +1,11 @@
-/* eslint-disable @typescript-eslint/no-empty-function */
 import type { ReactElement } from "react"
-import React, { createContext, useState, useContext } from "react"
+import { createContext, useState, useContext } from "react"
 import useMediaQuery from "@mui/material/useMediaQuery"
-import { createTheme, ThemeProvider, useTheme } from "@mui/material/styles"
+import {
+  createTheme,
+  ThemeProvider,
+  useTheme
+} from "@mui/material/styles"
 import { zhCN, enUS } from "@mui/material/locale"
 
 const locales = {
@@ -10,7 +13,9 @@ const locales = {
   enUS
 }
 
-const ColorModeContext = createContext({ toggleColorMode: () => {} })
+const ColorModeContext = createContext({
+  toggleColorMode: () => {}
+})
 
 export type SupportedLocales = keyof typeof locales
 
@@ -34,15 +39,20 @@ export type AppThemeProps = {
 }
 
 export function AppTheme({ children }: AppThemeProps) {
-  const prefersDarkMode = useMediaQuery("(prefers-color-scheme: dark)")
+  const prefersDarkMode = useMediaQuery(
+    "(prefers-color-scheme: dark)"
+  )
   const [mode, setMode] = useState<"light" | "dark">(
     prefersDarkMode ? "dark" : "light"
   )
-  const [locale, setLocale] = React.useState<SupportedLocales>("zhCN")
+  const [locale, setLocale] =
+    useState<SupportedLocales>("zhCN")
 
   const colorMode = {
     toggleColorMode: () => {
-      setMode(prevMode => (prevMode === "light" ? "dark" : "light"))
+      setMode(prevMode =>
+        prevMode === "light" ? "dark" : "light"
+      )
     }
   }
 
@@ -64,7 +74,9 @@ export function AppTheme({ children }: AppThemeProps) {
   return (
     <localContext.Provider value={localLang}>
       <ColorModeContext.Provider value={colorMode}>
-        <ThemeProvider theme={theme}>{children}</ThemeProvider>
+        <ThemeProvider theme={theme}>
+          {children}
+        </ThemeProvider>
       </ColorModeContext.Provider>
     </localContext.Provider>
   )
