@@ -5,6 +5,7 @@ import { AppTheme } from "./ThemeContext"
 import { Home } from "./home/Home"
 import { Projects } from "./home/Projects"
 import NotFound from "./home/404"
+import Palette from "./home/Palette"
 
 import Layout from "./layout/Layout"
 
@@ -16,7 +17,11 @@ export default function App() {
         <Routes>
           <Route path="/" element={<Home />} />
           <Route
-            path=":projectName"
+            path="/palette"
+            element={<Palette />}
+          />
+          <Route
+            path="/project/:projectName"
             element={<Projects />}
           />
           <Route

@@ -144,7 +144,7 @@ function ProjectCard({ name, title, date, body }: Project) {
           variant="contained"
           color="inherit"
           component={RouterLink}
-          to={"/" + name}
+          to={"/project/" + name}
         >
           {buttonText[locale]}
         </Button>

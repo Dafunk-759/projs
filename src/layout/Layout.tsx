@@ -2,6 +2,7 @@ import {
   AppBar,
   Box,
   Toolbar,
+  Tooltip,
   IconButton,
   Button,
   Brightness4Icon,
@@ -11,23 +12,28 @@ import {
   RouterLink,
   Container,
   Stack,
-  Avatar
+  Avatar,
+  ColorLensIcon
 } from "../components"
 
 import type {
   SupportedLocales,
-  LocalText
+  LocalText,
+  ColorMode
 } from "../ThemeContext"
 import {
   useDarkLightMode,
   useLocalLang
 } from "../ThemeContext"
 
-import type { PropsWithChildren } from "../types"
+import type { PropsWithChildren, OnClick } from "../types"
+import { useNavigate } from "react-router-dom"
 
 import avatarImg from "./avatar.png"
 
-export default function Layout({ children }: PropsWithChildren) {
+export default function Layout({
+  children
+}: PropsWithChildren) {
   return (
     <>
       <Header />
@@ -51,6 +57,7 @@ const headerText: LocalText = {
 function Header() {
   const { mode, toggleColorMode } = useDarkLightMode()
   const { setLocale, locale, locales } = useLocalLang()
+  const navigate = useNavigate()
 
   return (
     <Box sx={{ flexGrow: 1 }}>
@@ -87,18 +94,45 @@ function Header() {
               />
             )}
           />
-          <IconButton
+          <PaletteIcon 
+            onClick={() => navigate("/palette")}
+          />
+          <ColorModeIcon
             onClick={toggleColorMode}
-            color="inherit"
-          >
-            {mode === "dark" ? (
-              <Brightness7Icon />
-            ) : (
-              <Brightness4Icon />
-            )}
-          </IconButton>
+            mode={mode}
+          />
         </Toolbar>
       </AppBar>
     </Box>
+  )
+}
+
+function PaletteIcon({ onClick }: { onClick: OnClick }) {
+  return (
+    <Tooltip title="edit palette">
+      <IconButton onClick={onClick} color="inherit">
+        <ColorLensIcon />
+      </IconButton>
+    </Tooltip>
+  )
+}
+
+function ColorModeIcon({
+  onClick,
+  mode
+}: {
+  onClick: OnClick
+  mode: ColorMode
+}) {
+  return (
+    <Tooltip title="change color mode">
+      <IconButton onClick={onClick} color="inherit">
+        {mode === "dark" ? (
+          <Brightness7Icon />
+        ) : (
+          <Brightness4Icon />
+        )}
+      </IconButton>
+    </Tooltip>
   )
 }

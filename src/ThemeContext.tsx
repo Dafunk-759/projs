@@ -13,10 +13,13 @@ const locales = {
   enUS
 }
 
+//colormode context
+export type ColorMode = "light" | "dark"
 const ColorModeContext = createContext({
   toggleColorMode: () => {}
 })
 
+//local context
 export type SupportedLocales = keyof typeof locales
 
 export type LocalContext = {
@@ -30,9 +33,28 @@ export type LocalText<A = string> = {
 }
 
 const localContext = createContext<LocalContext>({
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   setLocale: (lang: SupportedLocales) => {}
 } as LocalContext)
+
+//palette context
+type PaletteContext = {
+  previewPalette: (
+    primary: string,
+    secondary: string
+  ) => void
+  submitPalette: (
+    primary: string,
+    secondary: string
+  ) => void
+}
+
+const paletteContext = createContext<PaletteContext>({
+  previewPalette: (
+    primary: string,
+    secondary: string
+  ) => {},
+  submitPalette: (primary: string, secondary: string) => {}
+})
 
 export type AppThemeProps = {
   children: ReactElement | ReactElement[]
@@ -42,11 +64,21 @@ export function AppTheme({ children }: AppThemeProps) {
   const prefersDarkMode = useMediaQuery(
     "(prefers-color-scheme: dark)"
   )
-  const [mode, setMode] = useState<"light" | "dark">(
+  const [mode, setMode] = useState<ColorMode>(
     prefersDarkMode ? "dark" : "light"
   )
+
   const [locale, setLocale] =
     useState<SupportedLocales>("zhCN")
+
+  const [paletteState, setPaletteState] = useState({
+    primary:
+      localStorage.getItem("theme.palette.primary") ??
+      "#1976d2",
+    secondary:
+      localStorage.getItem("theme.palette.secondary") ??
+      "#9c27b0"
+  })
 
   const colorMode = {
     toggleColorMode: () => {
@@ -62,23 +94,51 @@ export function AppTheme({ children }: AppThemeProps) {
     locales
   }
 
+  const palette: PaletteContext = {
+    previewPalette: (primary, secondary) => {
+      setPaletteState({
+        primary,
+        secondary
+      })
+    },
+    submitPalette: (primary, secondary) => {
+      localStorage.setItem("theme.palette.primary", primary)
+      localStorage.setItem(
+        "theme.palette.secondary",
+        secondary
+      )
+      setPaletteState({
+        primary,
+        secondary
+      })
+    }
+  }
+
   const theme = createTheme(
     {
       palette: {
-        mode
+        mode,
+        primary: {
+          main: paletteState.primary
+        },
+        secondary: {
+          main: paletteState.secondary
+        }
       }
     },
     locales[locale]
   )
 
   return (
-    <localContext.Provider value={localLang}>
-      <ColorModeContext.Provider value={colorMode}>
-        <ThemeProvider theme={theme}>
-          {children}
-        </ThemeProvider>
-      </ColorModeContext.Provider>
-    </localContext.Provider>
+    <paletteContext.Provider value={palette}>
+      <localContext.Provider value={localLang}>
+        <ColorModeContext.Provider value={colorMode}>
+          <ThemeProvider theme={theme}>
+            {children}
+          </ThemeProvider>
+        </ColorModeContext.Provider>
+      </localContext.Provider>
+    </paletteContext.Provider>
   )
 }
 
@@ -91,6 +151,18 @@ export function useDarkLightMode() {
   return {
     mode,
     toggleColorMode
+  }
+}
+
+export function usePalette() {
+  const theme = useTheme()
+  const { previewPalette, submitPalette } = useContext(paletteContext)
+
+  return {
+    primary: theme.palette.primary.main,
+    secondary: theme.palette.secondary.main,
+    previewPalette,
+    submitPalette
   }
 }
 
