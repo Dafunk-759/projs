@@ -16,8 +16,8 @@ import {
 import type { Project } from "./Projects"
 import { projs, projectNames } from "./Projects"
 
-import type { LocalText } from "../ThemeContext"
-import { useLocalLang } from "../ThemeContext"
+import type { LocalText } from "../context/ThemeContext"
+import { useLocalLang } from "../context/ThemeContext"
 
 export function Home() {
   return (

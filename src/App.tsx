@@ -1,6 +1,6 @@
 import { CssBaseline, Routes, Route } from "./components"
 
-import { AppTheme } from "./ThemeContext"
+import { AppTheme } from "./context/ThemeContext"
 
 import { Home } from "./home/Home"
 import { Projects } from "./home/Projects"

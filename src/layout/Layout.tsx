@@ -20,11 +20,11 @@ import type {
   SupportedLocales,
   LocalText,
   ColorMode
-} from "../ThemeContext"
+} from "../context/ThemeContext"
 import {
   useDarkLightMode,
   useLocalLang
-} from "../ThemeContext"
+} from "../context/ThemeContext"
 
 import type { PropsWithChildren, OnClick } from "../types"
 import { useNavigate } from "react-router-dom"

@@ -1,4 +1,6 @@
 import { useState } from "react"
+import useMediaQuery from "@mui/material/useMediaQuery"
+import { useTheme } from "@mui/material/styles"
 
 import {
   Container,
@@ -13,7 +15,7 @@ import {
   Button
 } from "../components"
 
-import { usePalette } from "../ThemeContext"
+import { usePalette } from "../context/ThemeContext"
 
 import type { PropsWithChildren, OnChange } from "../types"
 
@@ -27,6 +29,9 @@ export default function Palette() {
   const [primaryColor, setPrimaryColor] = useState(primary)
   const [secondaryColor, setSecondaryColor] =
     useState(secondary)
+
+  const theme = useTheme()
+  const isSm = useMediaQuery(theme.breakpoints.up("sm"))
 
   const onPreview = () => {
     previewPalette(primaryColor, secondaryColor)
@@ -43,16 +48,21 @@ export default function Palette() {
       </Typography>
       <Divider sx={{ m: 1 }} />
       <Stack
-        direction="row"
-        alignItems="center"
+        alignItems="flex-start"
         justifyContent="space-around"
+        direction={{ xs: "column", sm: "row" }}
+        spacing={{ xs: 1, sm: 2, md: 4 }}
+        sx={{m: 1}}
       >
         <ColorSelector
           colorValue={primaryColor}
           onChange={e => setPrimaryColor(e.target.value)}
           type="primary"
         />
-        <Divider orientation="vertical" flexItem />
+        <Divider
+          orientation={isSm ? "vertical" : "horizontal"}
+          flexItem
+        />
         <ColorSelector
           type="secondary"
           colorValue={secondaryColor}
