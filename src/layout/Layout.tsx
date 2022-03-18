@@ -81,7 +81,7 @@ function Header() {
               )}`
             }
             value={locale}
-            sx={{ m: 2, ml: "auto", width: 150 }}
+            sx={{ m: 2, ml: "auto", maxWidth: 125 }}
             disableClearable
             onChange={(_, newValue: string | null) => {
               setLocale(newValue as SupportedLocales)

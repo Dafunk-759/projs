@@ -142,7 +142,7 @@ function useRandomNumber(cb: () => void, ms: number) {
 
 function Layout({ children }: PropsWithChildren) {
   return (
-    <Container sx={{ m: 2 }}>
+    <Container sx={{marginBottom: 2}}>
       <Paper>
         <Stack
           alignItems="stretch"
