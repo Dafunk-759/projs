@@ -6,6 +6,7 @@ import { Container } from "../components"
 import NotFound from "./404"
 
 import Bin2Dec from "../projects/Bin2Dec/Bin2Dec"
+import Random from "../projects/Random/Random"
 
 export type Project = {
   name: string
@@ -36,6 +37,16 @@ const projectTable: Record<string, ProjectItem> = {
       and then displays its decimal equivalent.
     `,
     component: <Bin2Dec />
+  },
+  Random: {
+    name: "Random",
+    title: "随机数生成器",
+    date: "2022/3/18",
+    body: `
+      通过给定生成的数目，最小值和最大值。
+      生成在此范围内的随机数。
+    `,
+    component: <Random />
   }
 }
 
@@ -63,9 +74,5 @@ export function Projects() {
     return <NotFound />
   }
 
-  return (
-    <Container>
-      {item.component}
-    </Container>
-  )
+  return <Container>{item.component}</Container>
 }

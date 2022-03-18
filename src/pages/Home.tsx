@@ -36,8 +36,7 @@ const enDetail = {
     in order to show some simple projects 
     and experiment some technology
   `,
-  content:
-    `This is used to show some small projects, 
+  content: `This is used to show some small projects, 
     which are mainly used to practice techniques 
     and explore new techniques.`,
   overline: "powered by mui."
@@ -46,7 +45,7 @@ const enDetail = {
 const zhDetail = {
   head: "这里是一些项目的集合",
   subtitle: "主要用来展示一些小项目和探索一些新的技术",
-  content:`
+  content: `
     这里用来展示一些小的项目，
     这些项目主要是用来练习技术和探索新的技术。
   `,
@@ -103,9 +102,7 @@ function Projs() {
         value={value}
         onChange={(e, newValue) => setValue(newValue)}
       />
-      <Stack
-        spacing={{ xs: 1, sm: 2, md: 4 }}
-      >
+      <Stack spacing={{ xs: 1, sm: 2, md: 4 }}>
         {projCards}
       </Stack>
     </Paper>

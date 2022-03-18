@@ -87,14 +87,10 @@ function Header() {
               setLocale(newValue as SupportedLocales)
             }}
             renderInput={params => (
-              <TextField
-                {...params}
-                label="Locale"
-                fullWidth
-              />
+              <TextField {...params} label="Locale" />
             )}
           />
-          <PaletteIcon 
+          <PaletteIcon
             onClick={() => navigate("/palette")}
           />
           <ColorModeIcon

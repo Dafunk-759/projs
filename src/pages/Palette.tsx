@@ -52,7 +52,7 @@ export default function Palette() {
         justifyContent="space-around"
         direction={{ xs: "column", sm: "row" }}
         spacing={{ xs: 1, sm: 2, md: 4 }}
-        sx={{m: 1}}
+        sx={{ m: 1 }}
       >
         <ColorSelector
           colorValue={primaryColor}

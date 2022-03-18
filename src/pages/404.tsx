@@ -27,7 +27,7 @@ export default function NotFound() {
   const { locale } = useLocalLang()
 
   return (
-    <Container fixed sx={{mt: 10}}>
+    <Container fixed sx={{ mt: 10 }}>
       <Stack
         direction="row"
         spacing={4}

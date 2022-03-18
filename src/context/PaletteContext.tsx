@@ -1,7 +1,6 @@
-import { useTheme } from "@mui/material/styles"
 import { createContext, useState, useContext } from "react"
+import { useTheme } from "@mui/material/styles"
 
-//palette context
 type PaletteContext = {
   previewPalette: (
     primary: string,

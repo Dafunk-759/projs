@@ -6,10 +6,12 @@ import {
 import { configureStore } from "@reduxjs/toolkit"
 
 import { bin2DecReducer } from "./projects/Bin2Dec/bin2DecSlice"
+import { randomReducer } from "./projects/Random/randomSlice"
 
 export const store = configureStore({
   reducer: {
-    bin2Dec: bin2DecReducer
+    bin2Dec: bin2DecReducer,
+    random: randomReducer
   }
 })
 

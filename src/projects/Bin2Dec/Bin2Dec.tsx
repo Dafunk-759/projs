@@ -117,16 +117,31 @@ function ResultInfo({
       <Alert severity={type} sx={{ m: 2 }}>
         {text}
       </Alert>
-      <Tooltip title="copy">
-        <IconButton
-          onClick={() => copyText(ret)}
-          disabled={!isSuccess}
-          aria-label="copy"
-        >
-          <ContentCopyIcon />
-        </IconButton>
-      </Tooltip>
+      <CopyButton
+        onClick={() => copyText(ret)}
+        disabled={!isSuccess}
+      />
     </Stack>
+  )
+}
+
+function CopyButton({
+  onClick,
+  disabled
+}: {
+  onClick: OnClick
+  disabled: boolean
+}) {
+  return (
+    <Tooltip title="copy">
+      <IconButton
+        onClick={onClick}
+        disabled={disabled}
+        aria-label="copy"
+      >
+        <ContentCopyIcon />
+      </IconButton>
+    </Tooltip>
   )
 }
 
