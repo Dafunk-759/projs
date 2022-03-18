@@ -1,12 +1,21 @@
-import type { ReactElement } from "react"
+import { lazy, Suspense } from "react"
+
 import { useParams } from "react-router-dom"
 
-import { Container } from "../components"
+import {
+  Container,
+  CircularProgress,
+  Box
+} from "../components"
 
 import NotFound from "./404"
 
-import Bin2Dec from "../projects/Bin2Dec/Bin2Dec"
-import Random from "../projects/Random/Random"
+const Bin2Dec = lazy(
+  () => import("../projects/Bin2Dec/Bin2Dec")
+)
+const Random = lazy(
+  () => import("../projects/Random/Random")
+)
 
 export type Project = {
   name: string
@@ -17,7 +26,7 @@ export type Project = {
 }
 
 type ProjectItem = Omit<Project, "id"> & {
-  component: ReactElement
+  Component: ReturnType<typeof lazy>
 }
 
 const projectTable: Record<string, ProjectItem> = {
@@ -36,7 +45,7 @@ const projectTable: Record<string, ProjectItem> = {
       to 8 binary digits, 0's and 1's, in any sequence 
       and then displays its decimal equivalent.
     `,
-    component: <Bin2Dec />
+    Component: Bin2Dec
   },
   Random: {
     name: "Random",
@@ -46,7 +55,7 @@ const projectTable: Record<string, ProjectItem> = {
       通过给定生成的数目，最小值和最大值。
       生成在此范围内的随机数。
     `,
-    component: <Random />
+    Component: Random
   }
 }
 
@@ -74,5 +83,27 @@ export function Projects() {
     return <NotFound />
   }
 
-  return <Container>{item.component}</Container>
+  const { Component } = item
+
+  return (
+    <Container>
+      <Suspense fallback={<Fallback />}>
+        <Component />
+      </Suspense>
+    </Container>
+  )
+}
+
+function Fallback() {
+  return (
+    <Box
+      sx={{
+        display: "flex",
+        width: "100%",
+        justifyContent: "center"
+      }}
+    >
+      <CircularProgress />
+    </Box>
+  )
 }

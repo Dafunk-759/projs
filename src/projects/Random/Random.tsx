@@ -69,7 +69,11 @@ export default function Random() {
   const [max, setMax] = useState(state.max)
   const [sole, setSole] = useState(state.sole)
 
-  const error = max < min
+  const rangeError = max < min
+  const countError = count < 1 || count > 10
+
+  const error = rangeError || countError
+
 
   const { running, start, cancel } = useRandomNumber(
     () => dispatch(updateState({ count, min, max, sole })),
@@ -82,20 +86,21 @@ export default function Random() {
         随机数生成器
       </Typography>
       <NumberInput
+        error={countError}
         value={count}
         onChange={e => setCount(+e.target.value)}
         type="count"
         disabled={running}
       />
       <NumberInput
-        error={error}
+        error={rangeError}
         value={min}
         onChange={e => setMin(+e.target.value)}
         type="min"
         disabled={running}
       />
       <NumberInput
-        error={error}
+        error={rangeError}
         value={max}
         onChange={e => setMax(+e.target.value)}
         type="max"

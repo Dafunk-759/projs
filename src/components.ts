@@ -40,6 +40,7 @@ export { default as ListItemText } from "@mui/material/ListItemText"
 export { default as ListItemButton } from "@mui/material/ListItemButton"
 
 export { default as Skeleton } from "@mui/material/Skeleton"
+export { default as CircularProgress } from "@mui/material/CircularProgress"
 
 // react-router
 export { Link as RouterLink } from "react-router-dom"
