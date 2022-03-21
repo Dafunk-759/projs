@@ -8,6 +8,7 @@ import {
   CardContent,
   Button,
   Stack,
+  Grid,
   RouterLink,
   Autocomplete,
   TextField
@@ -21,35 +22,62 @@ import { useLocalLang } from "../context/ThemeContext"
 
 export function Home() {
   return (
-    <>
-      <Detail />
-      <Projs />
-    </>
+    <Grid
+      direction={{ xs: "column", sm: "row" }}
+      container
+      rowSpacing={1}
+      columnSpacing={{ xs: 1, sm: 2, md: 3 }}
+    >
+      <Grid item xs={4}>
+        <Detail />
+      </Grid>
+      <Grid item xs={8}>
+        <Projs />
+      </Grid>
+    </Grid>
   )
 }
 
 // details
 
 const enDetail = {
-  head: "This is a project collection.",
+  head: "Toy box",
   subtitle: `
-    in order to show some simple projects 
-    and experiment some technology
+    Here are some small items of daily practice collected.
   `,
-  content: `This is used to show some small projects, 
-    which are mainly used to practice techniques 
-    and explore new techniques.`,
-  overline: "powered by mui."
+  content: `
+    The reason why it is called a toy box,
+    Because here are some small projects of daily practice,
+    Mostly no more than 200 lines of code, since there were always demos when learning the front end before,
+    But after doing it, it is lost, and it is more troublesome to deploy a demo on the line alone.
+    So I simply made this toy box to save the demo I usually do.
+    This ensures the simplicity of the demo (just focusing on the demo itself,
+    Instead of a series of issues such as joint deployment online, it must be considered)
+    You can make these demos really useful.  
+  `,
+  overline: `
+    powered by mui.
+    depolyed by vercel.
+  `
 }
 
 const zhDetail = {
-  head: "这里是一些项目的集合",
-  subtitle: "主要用来展示一些小项目和探索一些新的技术",
+  head: "玩具箱",
+  subtitle: "这里收集了一些日常练习的小项目。",
   content: `
-    这里用来展示一些小的项目，
-    这些项目主要是用来练习技术和探索新的技术。
+    之所以管这里叫做玩具箱，
+    是因为这里都是一些日常练习的小项目，
+    大多不超过200行代码，由于以前学习前端时总是做些demo，
+    但是做完就丢，单独为一个demo部署上线又比较麻烦，
+    所以我干脆做了这个玩具箱来保存平时做的demo。
+    这样既可以保证demo的简洁(仅仅关注demo本身，
+    而不是连带部署上线等一系列问题都要考虑)
+    又可以让这些demo真正有用起来。
   `,
-  overline: "使用mui作为这些项目的基础。"
+  overline: `
+    powered by mui.
+    depolyed by vercel.
+  `
 }
 
 const detail: LocalText<typeof enDetail> = {

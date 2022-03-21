@@ -11,7 +11,6 @@ import {
   TextField,
   RouterLink,
   Container,
-  Stack,
   Avatar,
   ColorLensIcon
 } from "../components"
@@ -37,13 +36,8 @@ export default function Layout({
   return (
     <>
       <Header />
-      <Container sx={{ mt: 2 }}>
-        <Stack
-          direction={{ xs: "column", sm: "row" }}
-          spacing={{ xs: 1, sm: 2, md: 4 }}
-        >
-          {children}
-        </Stack>
+      <Container sx={{ mt: 2, mb: 2 }}>
+        {children}
       </Container>
     </>
   )
