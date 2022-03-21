@@ -16,6 +16,9 @@ const Bin2Dec = lazy(
 const Random = lazy(
   () => import("../projects/Random/Random")
 )
+const BorderRadius = lazy(
+  () => import("../projects/BorderRadius/BorderRadius")
+)
 
 export type Project = {
   name: string
@@ -56,6 +59,17 @@ const projectTable: Record<string, ProjectItem> = {
       生成在此范围内的随机数。
     `,
     Component: Random
+  },
+  BorderRadius: {
+    name: "BorderRadius",
+    title: "border-radius 预览板",
+    date: "2022/3/21",
+    body: `
+      可视化的改变border-radius的四个参数。
+      并查看容器的变化。
+      还可以导出css代码。
+    `,
+    Component: BorderRadius
   }
 }
 

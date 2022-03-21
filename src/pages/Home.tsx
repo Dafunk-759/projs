@@ -61,7 +61,7 @@ function Detail() {
   const { locale } = useLocalLang()
 
   return (
-    <Paper>
+    <Paper sx={{ alignSelf: "flex-start" }}>
       <Container>
         <Typography variant="h4" gutterBottom>
           {detail[locale].head}

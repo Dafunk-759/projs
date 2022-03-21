@@ -24,10 +24,13 @@ export { default as Divider } from "@mui/material/Divider"
 export { default as Fab } from "@mui/material/Fab"
 export { default as Alert } from "@mui/material/Alert"
 export { default as Tooltip } from "@mui/material/Tooltip"
+
 export { default as Input } from "@mui/material/Input"
+export { default as Select } from "@mui/material/Select"
 export { default as InputLabel } from "@mui/material/InputLabel"
 export { default as FormHelperText } from "@mui/material/FormHelperText"
 export { default as FormControl } from "@mui/material/FormControl"
+
 export { default as Brightness7Icon } from "@mui/icons-material/Brightness7"
 export { default as Brightness4Icon } from "@mui/icons-material/Brightness4"
 export { default as ContentCopyIcon } from "@mui/icons-material/ContentCopy"
