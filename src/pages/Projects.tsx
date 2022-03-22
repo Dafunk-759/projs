@@ -20,10 +20,28 @@ const BorderRadius = lazy(
   () => import("../projects/BorderRadius/BorderRadius")
 )
 
+export type ProjDate = `${number}/${number}/${number}`
+
+export const compareProjDate = (
+  date1: ProjDate,
+  date2: ProjDate
+): 0 | 1 | -1 => {
+  const d1 = date1.split("/").map(Number)
+  const d2 = date2.split("/").map(Number)
+
+  for (let i = 0; i < d1.length; i++) {
+    if (d1[i] > d2[i]) return 1
+  }
+
+  if (d1.every((v, i) => v === d2[i])) return 0
+
+  return -1
+}
+
 export type Project = {
   name: string
   title: string
-  date: string
+  date: ProjDate
   body: string
   id: number
 }

@@ -1,6 +1,4 @@
-import { useState, useReducer, useEffect } from "react"
-
-import type { Style } from "../types"
+import { useState } from "react"
 
 import {
   Paper,
@@ -19,14 +17,21 @@ import {
   AddIcon,
   Box,
   KeyboardArrowUpIcon,
-  Tooltip
+  Tooltip,
+  SelectInput
 } from "../components"
 
 import type { Project } from "./Projects"
-import { projs, projectNames } from "./Projects"
+import {
+  projs,
+  projectNames,
+  compareProjDate
+} from "./Projects"
 
 import type { LocalText } from "../context/ThemeContext"
 import { useLocalLang } from "../context/ThemeContext"
+
+import { useTransition } from "../hooks"
 
 export function Home() {
   return (
@@ -125,26 +130,99 @@ function Detail() {
 
 // projects
 
+type SortType =
+  | "date/asc"
+  | "date/desc"
+  | "dict/asc"
+  | "dict/desc"
+
+const sortOptions: { name: string; value: SortType }[] = [
+  { name: "日期升序", value: "date/asc" },
+  { name: "日期降序", value: "date/desc" },
+  { name: "字典升序", value: "dict/asc" },
+  { name: "字典降序", value: "dict/desc" }
+]
+
+type Compare = (a: Project, b: Project) => 0 | 1 | -1
+const compares: Record<SortType, Compare> = {
+  "date/asc": (a, b) => {
+    return compareProjDate(a.date, b.date)
+  },
+  "date/desc": (a, b) => {
+    return compareProjDate(b.date, a.date)
+  },
+  "dict/asc": (a, b) => {
+    if (a.name > b.name) {
+      return 1
+    } else if (a.name < b.name) {
+      return -1
+    } else {
+      return 0
+    }
+  },
+  "dict/desc": (a, b) => {
+    if (a.name > b.name) {
+      return -1
+    } else if (a.name < b.name) {
+      return 1
+    } else {
+      return 0
+    }
+  }
+}
+
 function Projs() {
   const [value, setValue] = useState<string | null>(null)
+  const [sortType, setSortType] =
+    useState<SortType>("date/desc")
+
+  const compare = compares[sortType]
 
   const projCards = projs
     .filter(p => (value === null ? true : p.name === value))
+    .sort(compare)
     .map(proj => <ProjectCard {...proj} key={proj.id} />)
+
+  const search = (
+    <Autocomplete
+      disablePortal
+      id="project-search-input"
+      options={projectNames}
+      sx={{ m: 2 }}
+      renderInput={params => (
+        <TextField {...params} label="project" />
+      )}
+      value={value}
+      onChange={(e, newValue) => setValue(newValue)}
+    />
+  )
+
+  const control = (
+    <Grid container>
+      <Grid
+        item
+        xs={6}
+        sx={{ display: "flex", alignItems: "center" }}
+      >
+        <SelectInput
+          name="sort"
+          label="排序"
+          value={sortType}
+          onChange={e =>
+            setSortType(e.target.value as SortType)
+          }
+          options={sortOptions}
+        />
+      </Grid>
+      <Grid item xs={6}>
+        {search}
+      </Grid>
+    </Grid>
+  )
 
   return (
     <Paper sx={{ padding: 1 }}>
-      <Autocomplete
-        disablePortal
-        id="project-search-input"
-        options={projectNames}
-        sx={{ m: 2 }}
-        renderInput={params => (
-          <TextField {...params} label="project" />
-        )}
-        value={value}
-        onChange={(e, newValue) => setValue(newValue)}
-      />
+      {control}
       <Stack spacing={{ xs: 1, sm: 2, md: 4 }}>
         {projCards}
       </Stack>
@@ -248,105 +326,4 @@ function FabMenu() {
       </Tooltip>
     </Box>
   )
-}
-
-/**
- * `start` 为起始状态 对应元素隐藏
- * `end` 为终止状态 对应元素显示
- * `initShow` 为初始显示与否 默认false
- *
- * 显示时，状态从start到end
- * 隐藏式，状态从end到start
- *
- * 返回值:
- *  `style` 传给要应用过渡动画的mui组件的sx属性
- *  `toggleShow` 控制对应元素的显示
- */
-function useTransition({
-  start,
-  end,
-  duration,
-  timingFunc,
-  propName = "all",
-  initShow = false,
-  delay
-}: {
-  start: Style
-  end: Style
-  duration: number
-  timingFunc: string
-  propName?: string
-  initShow?: boolean
-  delay?: number
-}) {
-  const [show, setShow] = useState(initShow)
-  const [style, setStyle] = useState<Style>(() => {
-    const transition =
-      `${propName} ${duration / 1000}s ${timingFunc}` +
-      (delay ? ` ${delay}` : "")
-
-    return initShow
-      ? {
-          ...end,
-          transition
-        }
-      : {
-          ...start,
-          transition,
-          display: "none"
-        }
-  })
-
-  const open = () => {
-    setShow(true)
-    setStyle((s: Style) => exclude(s, "display"))
-    setTimeout(() => {
-      setStyle((s: Style) => ({
-        ...exclude(s, Object.keys(start)),
-        ...end
-      }))
-    }, 0)
-  }
-
-  const close = () => {
-    setStyle((s: Style) => ({
-      ...exclude(s, Object.keys(end)),
-      ...start
-    }))
-
-    setTimeout(() => {
-      setShow(false)
-      setStyle((s: Style) => ({
-        ...s,
-        display: "none"
-      }))
-    }, duration)
-  }
-
-  return {
-    style,
-    toggleShow: show ? close : open
-  }
-}
-
-function exclude<
-  Obj extends Record<string, any>,
-  Props extends string
->(obj: Obj, props: Props | Props[]): Exclude<Obj, Props> {
-  const needRemove = (key: string) => {
-    if (Array.isArray(props)) {
-      return (props as string[]).includes(key)
-    } else {
-      return key === props
-    }
-  }
-
-  const ret: Record<string, any> = {}
-  Object.keys(obj).forEach(key => {
-    if (!needRemove(key)) {
-      ret[key] = obj[key]
-    }
-  })
-
-  return ret as Exclude<Obj, Props>
 }

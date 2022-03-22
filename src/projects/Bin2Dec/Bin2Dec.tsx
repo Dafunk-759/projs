@@ -5,9 +5,7 @@ import {
   Fab,
   KeyboardArrowDownIcon,
   Alert,
-  IconButton,
-  ContentCopyIcon,
-  Tooltip
+  CopyButton
 } from "../../components"
 
 import { useState } from "react"
@@ -18,6 +16,7 @@ import type {
   OnClick
 } from "../../types"
 import { useAppSelector, useAppDispatch } from "../../store"
+import { useCopy } from "../../hooks"
 
 import { selectAll, updateInput } from "./bin2DecSlice"
 
@@ -100,7 +99,7 @@ function ResultInfo({
   ret: string
   isSuccess: boolean
 }) {
-  const { copyText } = useCopy()
+  const { copySuccess, copyText } = useCopy()
 
   const text = isSuccess
     ? `The ret is: ${ret}`
@@ -120,43 +119,8 @@ function ResultInfo({
       <CopyButton
         onClick={() => copyText(ret)}
         disabled={!isSuccess}
+        color={copySuccess ? "success" : "default"}
       />
     </Stack>
   )
-}
-
-function CopyButton({
-  onClick,
-  disabled
-}: {
-  onClick: OnClick
-  disabled: boolean
-}) {
-  return (
-    <Tooltip title="copy">
-      <IconButton
-        onClick={onClick}
-        disabled={disabled}
-        aria-label="copy"
-      >
-        <ContentCopyIcon />
-      </IconButton>
-    </Tooltip>
-  )
-}
-
-function useCopy() {
-  const [copySuccess, setCopyState] = useState(false)
-
-  const copyText = (text: string) => {
-    navigator.clipboard
-      .writeText(text)
-      .then(_ => setCopyState(true))
-      .catch(_ => setCopyState(false))
-  }
-
-  return {
-    copySuccess,
-    copyText
-  }
 }

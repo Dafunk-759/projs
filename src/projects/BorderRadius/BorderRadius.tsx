@@ -2,8 +2,7 @@ import { useState } from "react"
 
 import type {
   PropsWithChildren,
-  OnChange,
-  OnClick
+  OnChange
 } from "../../types"
 
 import {
@@ -13,14 +12,11 @@ import {
   Typography,
   Box,
   TextField,
-  Select,
-  MenuItem,
-  FormControl,
-  InputLabel,
-  Tooltip,
-  IconButton,
-  ContentCopyIcon
+  CopyButton,
+  SelectInput
 } from "../../components"
+
+import { useCopy } from "../../hooks"
 
 type Position = "tl" | "tr" | "bl" | "br"
 type Unit = "px" | "%"
@@ -48,21 +44,17 @@ export default function BorderRadius() {
 
       <Preview borderRadius={borderRadius} />
 
-      <FormControl
+      <SelectInput
         sx={{ minWidth: 120, alignSelf: "flex-start" }}
-      >
-        <InputLabel id="unit-label">单位</InputLabel>
-        <Select
-          labelId="unit-label"
-          id="unit-select"
-          label="unit"
-          value={unit}
-          onChange={e => setUnit(e.target.value as Unit)}
-        >
-          <MenuItem value="%">%</MenuItem>
-          <MenuItem value="px">px</MenuItem>
-        </Select>
-      </FormControl>
+        name="unit"
+        label="单位"
+        options={[
+          { name: "%", value: "%" },
+          { name: "px", value: "px" }
+        ]}
+        value={unit}
+        onChange={e => setUnit(e.target.value as Unit)}
+      />
 
       <Stack
         sx={{ alignSelf: "stretch" }}
@@ -194,57 +186,13 @@ function Code({ borderRadius }: Props) {
       }}
     >
       <CopyButton
-        success={copySuccess}
         onClick={() => copyText(code)}
+        sx={{ alignSelf: "flex-end" }}
+        color={copySuccess ? "success" : "default"}
       />
       <pre>
         <code>{code}</code>
       </pre>
     </Box>
   )
-}
-
-function CopyButton({
-  onClick,
-  success
-}: {
-  onClick: OnClick
-  success: boolean
-}) {
-  return (
-    <Tooltip title="copy">
-      <IconButton
-        sx={{ alignSelf: "flex-end" }}
-        aria-label="copy"
-        onClick={onClick}
-        color={success ? "success" : "default"}
-      >
-        <ContentCopyIcon />
-      </IconButton>
-    </Tooltip>
-  )
-}
-
-function useCopy(successTime: number = 2000) {
-  const [copySuccess, setCopyState] = useState(false)
-
-  const copyText = (text: string) => {
-    navigator.clipboard
-      .writeText(text)
-      .then(_ => {
-        // copy 成功后2s内显示成功
-        // 2s 后恢复初始状态
-        setCopyState(true)
-
-        setTimeout(() => {
-          setCopyState(false)
-        }, successTime)
-      })
-      .catch(_ => setCopyState(false))
-  }
-
-  return {
-    copySuccess,
-    copyText
-  }
 }
