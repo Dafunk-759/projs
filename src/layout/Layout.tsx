@@ -55,7 +55,11 @@ function Header() {
 
   return (
     <Box sx={{ flexGrow: 1 }}>
-      <AppBar position="static" color="default">
+      <AppBar
+        position="static"
+        color="default"
+        id="app-top-anchor"
+      >
         <Toolbar>
           <Avatar sx={{ mr: 2 }} alt="Jq" src={avatarImg} />
           <Button

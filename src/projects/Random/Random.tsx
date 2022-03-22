@@ -74,7 +74,6 @@ export default function Random() {
 
   const error = rangeError || countError
 
-
   const { running, start, cancel } = useRandomNumber(
     () => dispatch(updateState({ count, min, max, sole })),
     50
@@ -147,7 +146,7 @@ function useRandomNumber(cb: () => void, ms: number) {
 
 function Layout({ children }: PropsWithChildren) {
   return (
-    <Container sx={{marginBottom: 2}}>
+    <Container sx={{ marginBottom: 2 }}>
       <Paper>
         <Stack
           alignItems="stretch"

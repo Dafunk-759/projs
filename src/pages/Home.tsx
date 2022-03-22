@@ -1,4 +1,7 @@
-import { useState } from "react"
+import { useState, useReducer, useEffect } from "react"
+
+import type { Style } from "../types"
+
 import {
   Paper,
   Container,
@@ -11,7 +14,12 @@ import {
   Grid,
   RouterLink,
   Autocomplete,
-  TextField
+  TextField,
+  Fab,
+  AddIcon,
+  Box,
+  KeyboardArrowUpIcon,
+  Tooltip
 } from "../components"
 
 import type { Project } from "./Projects"
@@ -22,19 +30,22 @@ import { useLocalLang } from "../context/ThemeContext"
 
 export function Home() {
   return (
-    <Grid
-      direction={{ xs: "column", sm: "row" }}
-      container
-      rowSpacing={1}
-      columnSpacing={{ xs: 1, sm: 2, md: 3 }}
-    >
-      <Grid item xs={4}>
-        <Detail />
+    <>
+      <Grid
+        direction={{ xs: "column", sm: "row" }}
+        container
+        rowSpacing={1}
+        columnSpacing={{ xs: 1, sm: 2, md: 3 }}
+      >
+        <Grid item xs={4}>
+          <Detail />
+        </Grid>
+        <Grid item xs={8}>
+          <Projs />
+        </Grid>
       </Grid>
-      <Grid item xs={8}>
-        <Projs />
-      </Grid>
-    </Grid>
+      <FabMenu />
+    </>
   )
 }
 
@@ -89,7 +100,11 @@ function Detail() {
   const { locale } = useLocalLang()
 
   return (
-    <Paper sx={{ alignSelf: "flex-start" }}>
+    <Paper
+      sx={{
+        alignSelf: "flex-start"
+      }}
+    >
       <Container>
         <Typography variant="h4" gutterBottom>
           {detail[locale].head}
@@ -176,4 +191,162 @@ function ProjectCard({ name, title, date, body }: Project) {
       </CardActions>
     </Card>
   )
+}
+
+// menu
+function FabMenu() {
+  const { style, toggleShow } = useTransition({
+    start: {
+      opacity: 0,
+      transform: "translateY(100%)"
+    },
+    end: {
+      opacity: 1,
+      transform: "none"
+    },
+    duration: 500,
+    timingFunc: "ease"
+  })
+
+  const gotoTop = () => {
+    document
+      .querySelector("#app-top-anchor")
+      ?.scrollIntoView({
+        behavior: "smooth"
+      })
+  }
+
+  return (
+    <Box
+      sx={{
+        position: "fixed",
+        right: "40px",
+        bottom: "40px"
+      }}
+    >
+      <Stack direction="column" sx={{ ...style }}>
+        <Tooltip title="回到顶部" placement="left">
+          <Fab
+            color="primary"
+            aria-label="goto top"
+            onClick={gotoTop}
+          >
+            <KeyboardArrowUpIcon />
+          </Fab>
+        </Tooltip>
+      </Stack>
+
+      <Tooltip title="菜单" placement="left">
+        <Fab
+          color="primary"
+          aria-label="add"
+          sx={{ mt: 1 }}
+          onClick={toggleShow}
+        >
+          <AddIcon />
+        </Fab>
+      </Tooltip>
+    </Box>
+  )
+}
+
+/**
+ * `start` 为起始状态 对应元素隐藏
+ * `end` 为终止状态 对应元素显示
+ * `initShow` 为初始显示与否 默认false
+ *
+ * 显示时，状态从start到end
+ * 隐藏式，状态从end到start
+ *
+ * 返回值:
+ *  `style` 传给要应用过渡动画的mui组件的sx属性
+ *  `toggleShow` 控制对应元素的显示
+ */
+function useTransition({
+  start,
+  end,
+  duration,
+  timingFunc,
+  propName = "all",
+  initShow = false,
+  delay
+}: {
+  start: Style
+  end: Style
+  duration: number
+  timingFunc: string
+  propName?: string
+  initShow?: boolean
+  delay?: number
+}) {
+  const [show, setShow] = useState(initShow)
+  const [style, setStyle] = useState<Style>(() => {
+    const transition =
+      `${propName} ${duration / 1000}s ${timingFunc}` +
+      (delay ? ` ${delay}` : "")
+
+    return initShow
+      ? {
+          ...end,
+          transition
+        }
+      : {
+          ...start,
+          transition,
+          display: "none"
+        }
+  })
+
+  const open = () => {
+    setShow(true)
+    setStyle((s: Style) => exclude(s, "display"))
+    setTimeout(() => {
+      setStyle((s: Style) => ({
+        ...exclude(s, Object.keys(start)),
+        ...end
+      }))
+    }, 0)
+  }
+
+  const close = () => {
+    setStyle((s: Style) => ({
+      ...exclude(s, Object.keys(end)),
+      ...start
+    }))
+
+    setTimeout(() => {
+      setShow(false)
+      setStyle((s: Style) => ({
+        ...s,
+        display: "none"
+      }))
+    }, duration)
+  }
+
+  return {
+    style,
+    toggleShow: show ? close : open
+  }
+}
+
+function exclude<
+  Obj extends Record<string, any>,
+  Props extends string
+>(obj: Obj, props: Props | Props[]): Exclude<Obj, Props> {
+  const needRemove = (key: string) => {
+    if (Array.isArray(props)) {
+      return (props as string[]).includes(key)
+    } else {
+      return key === props
+    }
+  }
+
+  const ret: Record<string, any> = {}
+  Object.keys(obj).forEach(key => {
+    if (!needRemove(key)) {
+      ret[key] = obj[key]
+    }
+  })
+
+  return ret as Exclude<Obj, Props>
 }
