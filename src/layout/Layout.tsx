@@ -4,20 +4,19 @@ import {
   Toolbar,
   Tooltip,
   IconButton,
-  Button,
   Brightness4Icon,
   Brightness7Icon,
   Autocomplete,
   TextField,
-  RouterLink,
   Container,
   Avatar,
-  ColorLensIcon
+  ColorLensIcon,
+  HomeIcon,
+  IconLink
 } from "../components"
 
 import type {
   SupportedLocales,
-  LocalText,
   ColorMode
 } from "../context/ThemeContext"
 import {
@@ -26,9 +25,8 @@ import {
 } from "../context/ThemeContext"
 
 import type { PropsWithChildren, OnClick } from "../types"
-import { useNavigate } from "react-router-dom"
 
-import avatarImg from "./avatar.png"
+import avatarImg from "../static/avatar.png"
 
 export default function Layout({
   children
@@ -43,16 +41,51 @@ export default function Layout({
   )
 }
 
-const headerText: LocalText = {
-  zhCN: "主页",
-  enUS: "Home"
-}
-
 function Header() {
   const { mode, toggleColorMode } = useDarkLightMode()
   const { setLocale, locale, locales } = useLocalLang()
-  const navigate = useNavigate()
 
+  const localeInput = (
+    <Autocomplete
+      options={Object.keys(locales)}
+      getOptionLabel={key =>
+        `${key.substring(0, 2)}-${key.substring(2, 4)}`
+      }
+      value={locale}
+      sx={{ m: 2, ml: "auto", maxWidth: 125 }}
+      disableClearable
+      onChange={(_, newValue: string | null) => {
+        setLocale(newValue as SupportedLocales)
+      }}
+      renderInput={params => (
+        <TextField {...params} label="Locale" />
+      )}
+    />
+  )
+
+  return (
+    <HeaderContainer>
+      <Avatar sx={{ mr: 2 }} alt="Jq" src={avatarImg} />
+
+      <IconLink to="/" tooltip="go home">
+        <HomeIcon />
+      </IconLink>
+
+      {localeInput}
+
+      <IconLink to="/palette" tooltip="edit theme">
+        <ColorLensIcon />
+      </IconLink>
+
+      <ColorModeIcon
+        onClick={toggleColorMode}
+        mode={mode}
+      />
+    </HeaderContainer>
+  )
+}
+
+function HeaderContainer({ children }: PropsWithChildren) {
   return (
     <Box sx={{ flexGrow: 1 }}>
       <AppBar
@@ -60,54 +93,9 @@ function Header() {
         color="default"
         id="app-top-anchor"
       >
-        <Toolbar>
-          <Avatar sx={{ mr: 2 }} alt="Jq" src={avatarImg} />
-          <Button
-            variant="contained"
-            color="inherit"
-            component={RouterLink}
-            to="/"
-          >
-            {headerText[locale]}
-          </Button>
-          <Autocomplete
-            options={Object.keys(locales)}
-            getOptionLabel={key =>
-              `${key.substring(0, 2)}-${key.substring(
-                2,
-                4
-              )}`
-            }
-            value={locale}
-            sx={{ m: 2, ml: "auto", maxWidth: 125 }}
-            disableClearable
-            onChange={(_, newValue: string | null) => {
-              setLocale(newValue as SupportedLocales)
-            }}
-            renderInput={params => (
-              <TextField {...params} label="Locale" />
-            )}
-          />
-          <PaletteIcon
-            onClick={() => navigate("/palette")}
-          />
-          <ColorModeIcon
-            onClick={toggleColorMode}
-            mode={mode}
-          />
-        </Toolbar>
+        <Toolbar>{children}</Toolbar>
       </AppBar>
     </Box>
-  )
-}
-
-function PaletteIcon({ onClick }: { onClick: OnClick }) {
-  return (
-    <Tooltip title="edit palette">
-      <IconButton onClick={onClick} color="inherit">
-        <ColorLensIcon />
-      </IconButton>
-    </Tooltip>
   )
 }
 

@@ -19,9 +19,13 @@ import CssBaseline from "@mui/material/CssBaseline"
 import Stack from "@mui/material/Stack"
 import Grid from "@mui/material/Grid"
 import Typography from "@mui/material/Typography"
+
 import Card from "@mui/material/Card"
 import CardActions from "@mui/material/CardActions"
 import CardContent from "@mui/material/CardContent"
+import CardMedia from "@mui/material/CardMedia"
+import CardHeader from "@mui/material/CardHeader"
+
 import Avatar from "@mui/material/Avatar"
 import Divider from "@mui/material/Divider"
 import Fab from "@mui/material/Fab"
@@ -44,6 +48,9 @@ import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown"
 import AddIcon from "@mui/icons-material/Add"
 import ColorLensIcon from "@mui/icons-material/ColorLens"
 import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp"
+import HomeIcon from "@mui/icons-material/Home"
+import FindInPageIcon from "@mui/icons-material/FindInPage"
+import GitHubIcon from "@mui/icons-material/GitHub"
 
 import List from "@mui/material/List"
 import ListItem from "@mui/material/ListItem"
@@ -53,7 +60,14 @@ import ListItemButton from "@mui/material/ListItemButton"
 import Skeleton from "@mui/material/Skeleton"
 import CircularProgress from "@mui/material/CircularProgress"
 
-import type { Style } from "./types"
+import type {
+  Style,
+  OnClick,
+  PropsWithChildren
+} from "./types"
+
+import type { NavigateOptions, To } from "react-router-dom"
+import { useNavigate } from "react-router-dom"
 
 export {
   AppBar,
@@ -74,6 +88,8 @@ export {
   Card,
   CardActions,
   CardContent,
+  CardMedia,
+  CardHeader,
   Avatar,
   Divider,
   Fab,
@@ -91,6 +107,9 @@ export {
   AddIcon,
   ColorLensIcon,
   KeyboardArrowUpIcon,
+  HomeIcon,
+  FindInPageIcon,
+  GitHubIcon,
   List,
   ListItem,
   ListItemText,
@@ -100,7 +119,6 @@ export {
 }
 
 // react-router
-export { Link as RouterLink } from "react-router-dom"
 export { Routes, Route } from "react-router-dom"
 
 // custom
@@ -146,5 +164,41 @@ export function SelectInput({
         ))}
       </Select>
     </FormControl>
+  )
+}
+
+export function IconLink({
+  to,
+  navigateOptions,
+  onClick,
+  tooltip,
+  children,
+  ...props
+}: PropsWithChildren<{
+  to: To
+  navigateOptions?: NavigateOptions
+  onClick?: OnClick
+  tooltip?: string
+  props?: IconButtonProps
+}>) {
+  const navigate = useNavigate()
+
+  const iconButton = (
+    <IconButton
+      {...props}
+      onClick={e => {
+        navigate(to, navigateOptions)
+        onClick?.(e)
+      }}
+      color="inherit"
+    >
+      {children}
+    </IconButton>
+  )
+
+  return tooltip ? (
+    <Tooltip title={tooltip}>{iconButton}</Tooltip>
+  ) : (
+    iconButton
   )
 }

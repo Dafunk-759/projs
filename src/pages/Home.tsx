@@ -2,15 +2,14 @@ import { useState } from "react"
 
 import {
   Paper,
-  Container,
   Typography,
   Card,
   CardActions,
   CardContent,
-  Button,
+  CardMedia,
+  CardHeader,
   Stack,
   Grid,
-  RouterLink,
   Autocomplete,
   TextField,
   Fab,
@@ -18,7 +17,11 @@ import {
   Box,
   KeyboardArrowUpIcon,
   Tooltip,
-  SelectInput
+  SelectInput,
+  IconLink,
+  FindInPageIcon,
+  GitHubIcon,
+  Divider
 } from "../components"
 
 import type { Project } from "./Projects"
@@ -32,6 +35,8 @@ import type { LocalText } from "../context/ThemeContext"
 import { useLocalLang } from "../context/ThemeContext"
 
 import { useTransition } from "../hooks"
+
+import detailImag from "../static/detail.png"
 
 export function Home() {
   return (
@@ -49,6 +54,7 @@ export function Home() {
           <Projs />
         </Grid>
       </Grid>
+      <Footer />
       <FabMenu />
     </>
   )
@@ -105,26 +111,26 @@ function Detail() {
   const { locale } = useLocalLang()
 
   return (
-    <Paper
-      sx={{
-        alignSelf: "flex-start"
-      }}
-    >
-      <Container>
-        <Typography variant="h4" gutterBottom>
-          {detail[locale].head}
-        </Typography>
-        <Typography variant="subtitle1" gutterBottom>
-          {detail[locale].subtitle}
-        </Typography>
+    <Card>
+      <CardHeader
+        title={detail[locale].head}
+        subheader={detail[locale].subtitle}
+      />
+      <CardMedia
+        component="img"
+        height="194"
+        image={detailImag}
+        alt="tool box"
+      />
+      <CardContent>
         <Typography variant="body1" gutterBottom>
           {detail[locale].content}
         </Typography>
         <Typography variant="overline" gutterBottom>
           {detail[locale].overline}
         </Typography>
-      </Container>
-    </Paper>
+      </CardContent>
+    </Card>
   )
 }
 
@@ -257,15 +263,12 @@ function ProjectCard({ name, title, date, body }: Project) {
         <Typography variant="body2">{body}</Typography>
       </CardContent>
       <CardActions>
-        <Button
-          size="small"
-          variant="contained"
-          color="inherit"
-          component={RouterLink}
-          to={"/project/" + name}
+        <IconLink
+          to={`/project/${name}`}
+          tooltip={buttonText[locale]}
         >
-          {buttonText[locale]}
-        </Button>
+          <FindInPageIcon />
+        </IconLink>
       </CardActions>
     </Card>
   )
@@ -325,5 +328,37 @@ function FabMenu() {
         </Fab>
       </Tooltip>
     </Box>
+  )
+}
+
+function Footer() {
+  return (
+    <>
+      <Divider sx={{ mt: 5 }} />
+      <Grid
+        container
+        spacing={2}
+        alignItems="center"
+        component="footer"
+      >
+        <Grid item>
+          <Typography
+            variant="overline"
+            sx={{ lineHeight: 5 }}
+          >
+            Copyright © 2022 Dafunk.
+          </Typography>
+        </Grid>
+
+        <Grid item sx={{ ml: "auto" }}>
+          <a
+            href="https://github.com/Dafunk-759"
+            target="_blank"
+          >
+            <GitHubIcon />
+          </a>
+        </Grid>
+      </Grid>
+    </>
   )
 }

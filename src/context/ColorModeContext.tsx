@@ -1,8 +1,11 @@
 import { createContext, useState, useContext } from "react"
-import useMediaQuery from "@mui/material/useMediaQuery"
 import { useTheme } from "@mui/material/styles"
 
 export type ColorMode = "light" | "dark"
+const modeTable: Record<ColorMode, ColorMode> = {
+  dark: "light",
+  light: "dark"
+}
 
 const ColorModeContext = createContext({
   toggleColorMode: () => {}
@@ -11,18 +14,27 @@ const ColorModeContext = createContext({
 export const ColorModeProvider = ColorModeContext.Provider
 
 export function useColorModeState() {
-  const prefersDarkMode = useMediaQuery(
-    "(prefers-color-scheme: dark)"
-  )
-  const [mode, setMode] = useState<ColorMode>(
-    prefersDarkMode ? "dark" : "light"
-  )
+  const [mode, setMode] = useState<ColorMode>(() => {
+    const mode = localStorage.getItem(
+      "theme.mode"
+    ) as ColorMode
+    if (mode) return mode
+
+    localStorage.setItem("theme.mode", "dark")
+    return localStorage.getItem("theme.mode") as ColorMode
+  })
 
   const colorMode = {
     toggleColorMode: () => {
-      setMode(prevMode =>
-        prevMode === "light" ? "dark" : "light"
+      const currentMode = localStorage.getItem(
+        "theme.mode"
+      ) as ColorMode
+
+      localStorage.setItem(
+        "theme.mode",
+        modeTable[currentMode]
       )
+      setMode(modeTable[currentMode])
     }
   }
 
