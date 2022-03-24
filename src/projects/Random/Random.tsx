@@ -1,9 +1,6 @@
 import { useState, useRef } from "react"
 
 import {
-  Container,
-  Paper,
-  Stack,
   Typography,
   FormControl,
   Input,
@@ -17,15 +14,15 @@ import {
   TextField,
   MenuItem,
   Skeleton,
-  Box
+  Box,
+  CenterStack as Layout
 } from "../../components"
 
-import type {
-  PropsWithChildren,
-  OnChange
-} from "../../types"
+import type { OnChange } from "../../types"
 
 import { useAppSelector, useAppDispatch } from "../../store"
+import { useCopy } from "../../hooks"
+
 import { selectAll, updateState } from "./randomSlice"
 
 type InputType = "count" | "min" | "max"
@@ -80,7 +77,12 @@ export default function Random() {
   )
 
   return (
-    <Layout>
+    <Layout
+      alignItems="stretch"
+      sx={{
+        "& > :not(style)": { m: 2 }
+      }}
+    >
       <Typography sx={{ alignSelf: "center" }} variant="h5">
         随机数生成器
       </Typography>
@@ -142,23 +144,6 @@ function useRandomNumber(cb: () => void, ms: number) {
     start,
     cancel
   }
-}
-
-function Layout({ children }: PropsWithChildren) {
-  return (
-    <Container sx={{ marginBottom: 2 }}>
-      <Paper>
-        <Stack
-          alignItems="stretch"
-          sx={{
-            "& > :not(style)": { m: 2 }
-          }}
-        >
-          {children}
-        </Stack>
-      </Paper>
-    </Container>
-  )
 }
 
 function NumberInput({
@@ -288,20 +273,4 @@ function ShowResult({ result }: { result: number[] }) {
       ))}
     </List>
   )
-}
-
-function useCopy() {
-  const [copySuccess, setCopyState] = useState(false)
-
-  const copyText = (text: string) => {
-    navigator.clipboard
-      .writeText(text)
-      .then(_ => setCopyState(true))
-      .catch(_ => setCopyState(false))
-  }
-
-  return {
-    copySuccess,
-    copyText
-  }
 }

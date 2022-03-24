@@ -1,19 +1,15 @@
 import { useState } from "react"
 
-import type {
-  PropsWithChildren,
-  OnChange
-} from "../../types"
+import type { OnChange } from "../../types"
 
 import {
-  Container,
-  Paper,
   Stack,
   Typography,
   Box,
   TextField,
   CopyButton,
-  SelectInput
+  SelectInput,
+  CenterStack as Layout
 } from "../../components"
 
 import { useCopy } from "../../hooks"
@@ -39,7 +35,12 @@ export default function BorderRadius() {
     .join(" ")
 
   return (
-    <Layout>
+    <Layout
+      alignItems="center"
+      sx={{
+        "& > :not(style)": { m: 2 }
+      }}
+    >
       <Typography variant="h4">border radius</Typography>
 
       <Preview borderRadius={borderRadius} />
@@ -122,23 +123,6 @@ function RadiusInput({
       value={value}
       onChange={onChange}
     />
-  )
-}
-
-function Layout({ children }: PropsWithChildren) {
-  return (
-    <Container sx={{ marginBottom: 2 }}>
-      <Paper>
-        <Stack
-          alignItems="center"
-          sx={{
-            "& > :not(style)": { m: 2 }
-          }}
-        >
-          {children}
-        </Stack>
-      </Paper>
-    </Container>
   )
 }
 

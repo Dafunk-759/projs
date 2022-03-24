@@ -19,6 +19,9 @@ const Random = lazy(
 const BorderRadius = lazy(
   () => import("../projects/BorderRadius/BorderRadius")
 )
+const ItemBag = lazy(
+  () => import("../projects/ItemBag/ItemBag")
+)
 
 export type ProjDate = `${number}/${number}/${number}`
 
@@ -88,6 +91,17 @@ const projectTable: Record<string, ProjectItem> = {
       还可以导出css代码。
     `,
     Component: BorderRadius
+  },
+  ItemBag: {
+    name: "ItemBag",
+    title: "装备背包",
+    date: "2022/3/24",
+    body: `
+      一个模仿RPG游戏的装备背包。
+      物品可以拖拽交换。
+      使用web drag/drop api实现。
+    `,
+    Component: ItemBag
   }
 }
 

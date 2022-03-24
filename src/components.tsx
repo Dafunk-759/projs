@@ -16,7 +16,10 @@ import MenuItem from "@mui/material/MenuItem"
 import Paper from "@mui/material/Paper"
 import Container from "@mui/material/Container"
 import CssBaseline from "@mui/material/CssBaseline"
+
 import Stack from "@mui/material/Stack"
+import type { StackProps } from "@mui/material/Stack"
+
 import Grid from "@mui/material/Grid"
 import Typography from "@mui/material/Typography"
 
@@ -51,6 +54,9 @@ import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp"
 import HomeIcon from "@mui/icons-material/Home"
 import FindInPageIcon from "@mui/icons-material/FindInPage"
 import GitHubIcon from "@mui/icons-material/GitHub"
+import FastfoodIcon from "@mui/icons-material/Fastfood"
+import LocalDrinkIcon from "@mui/icons-material/LocalDrink"
+import CookieIcon from "@mui/icons-material/Cookie"
 
 import List from "@mui/material/List"
 import ListItem from "@mui/material/ListItem"
@@ -110,6 +116,9 @@ export {
   HomeIcon,
   FindInPageIcon,
   GitHubIcon,
+  FastfoodIcon,
+  LocalDrinkIcon,
+  CookieIcon,
   List,
   ListItem,
   ListItemText,
@@ -174,13 +183,13 @@ export function IconLink({
   tooltip,
   children,
   ...props
-}: PropsWithChildren<{
+}: {
   to: To
   navigateOptions?: NavigateOptions
   onClick?: OnClick
   tooltip?: string
-  props?: IconButtonProps
-}>) {
+} & PropsWithChildren &
+  IconButtonProps) {
   const navigate = useNavigate()
 
   const iconButton = (
@@ -200,5 +209,18 @@ export function IconLink({
     <Tooltip title={tooltip}>{iconButton}</Tooltip>
   ) : (
     iconButton
+  )
+}
+
+export function CenterStack({
+  children,
+  ...props
+}: PropsWithChildren & StackProps) {
+  return (
+    <Container sx={{ marginBottom: 2 }}>
+      <Paper>
+        <Stack {...props}>{children}</Stack>
+      </Paper>
+    </Container>
   )
 }

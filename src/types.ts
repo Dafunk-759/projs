@@ -1,7 +1,8 @@
 import type {
   ReactElement,
   ChangeEventHandler,
-  MouseEventHandler
+  MouseEventHandler,
+  HTMLAttributes
 } from "react"
 
 import { SxProps, Theme } from "@mui/material/styles"
@@ -19,3 +20,5 @@ export type OnChange = ChangeEventHandler<
 export type OnClick = MouseEventHandler<HTMLButtonElement>
 
 export type Style = Exclude<SxProps<Theme>, null>
+
+export type DivProps = HTMLAttributes<HTMLDivElement>
