@@ -29,6 +29,8 @@ import {
 } from "./PaletteContext"
 export { usePalette } from "./PaletteContext"
 
+export { useTheme } from "@mui/material/styles"
+
 export function AppTheme({ children }: PropsWithChildren) {
   const { mode, colorMode } = useColorModeState()
 
